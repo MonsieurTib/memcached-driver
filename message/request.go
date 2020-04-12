@@ -1,4 +1,4 @@
-package requests
+package message
 
 import "encoding/binary"
 
@@ -14,7 +14,10 @@ type Request struct {
 }
 
 func (req *Request) setHeader() []byte {
-	extraLength := 8
+	extraLength := 0
+	if req.Expiration != 0 {
+		extraLength = 8
+	}
 	data := make([]byte, HEADER_LENGTH+extraLength+len(req.Key)+len(req.Body))
 	data[0] = MAGIC_REQUEST
 	data[1] = byte(req.OpCode)
