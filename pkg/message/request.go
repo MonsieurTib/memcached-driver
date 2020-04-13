@@ -15,7 +15,7 @@ type Request struct {
 
 func (req *Request) setHeader() []byte {
 	extraLength := 0
-	if req.Expiration != 0 {
+	if req.Expiration != 0 || req.Body != nil {
 		extraLength = 8
 	}
 	data := make([]byte, HEADER_LENGTH+extraLength+len(req.Key)+len(req.Body))
@@ -28,7 +28,7 @@ func (req *Request) setHeader() []byte {
 	binary.BigEndian.PutUint32(data[8:], uint32(len(req.Body)+len(req.Key)+extraLength))
 	binary.BigEndian.PutUint32(data[12:], req.Opaque)
 	binary.BigEndian.PutUint64(data[16:], req.Cas)
-	copy(data[24+extraLength:], req.Key)
+	copy(data[HEADER_LENGTH+extraLength:], req.Key)
 	return data
 }
 func (req *Request) GetBytes() []byte {

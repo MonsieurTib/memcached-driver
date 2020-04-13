@@ -24,9 +24,7 @@ func (response *Response) TryParseHeader(data []byte) bool {
 	if data[0] != MAGIC_RESPONSE {
 		panic("unexpected response")
 	}
-	/*for i, datum := range data {
-		println(i, datum)
-	}*/
+
 	response.OpCode = CommandOpCode(data[1])
 	response.KeyLength = binary.BigEndian.Uint16(data[2:])
 	response.ExtraLength = byte(data[4])
@@ -40,15 +38,11 @@ func (response *Response) TryParseHeader(data []byte) bool {
 }
 func (response *Response) TryParseBody(data []byte) bool {
 
-	println("BODY**************************")
-
 	response.Flags = binary.BigEndian.Uint32(data[1:])
 	index := response.KeyLength + uint16(response.ExtraLength)
 
 	response.Body = make([]byte, response.TotalBodyLength-(uint32(response.KeyLength)+uint32(response.ExtraLength)))
 	copy(response.Body, data[index:])
-	/*for i, b := range response.Body {
-		println(i,b)
-	}*/
+
 	return true
 }
