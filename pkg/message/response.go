@@ -26,7 +26,7 @@ func (response *Response) TryParseHeader(data []byte) bool {
 	}
 
 	response.OpCode = CommandOpCode(data[1])
-	response.KeyLength = binary.BigEndian.Uint16(data[2:])
+	response.KeyLength = binary.BigEndian.Uint16(data[2:4])
 	response.ExtraLength = byte(data[4])
 	response.DataType = byte(data[5])
 	response.Status = ResponseStatus(binary.BigEndian.Uint16(data[6:8]))
